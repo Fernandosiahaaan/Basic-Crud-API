@@ -98,7 +98,12 @@ def update_product(id):
     cur.execute("UPDATE products SET name=%s, price=%s WHERE id=%s", (name, price, id))
     conn.commit()
     if cur.rowcount == 0:
-        return jsonify({"status": 400, "message": f"Tidak ada produk dengan id : {id}"})
+        return jsonify(
+            {
+                "status": HTTP_Status_Code.StatusBadRequest.value,
+                "message": f"Tidak ada produk dengan id : {id}",
+            }
+        )
     else:
         product = Product(id, name, price).__dict__
         return jsonify(
