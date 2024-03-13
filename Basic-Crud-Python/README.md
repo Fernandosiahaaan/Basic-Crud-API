@@ -2,7 +2,7 @@
 
 ## Description
 
-This Repo describe how to create basic CRUD (Create, Read, Update, and Delete) in API flow in Python using Flask Framework.
+This Repo describe how to create basic CRUD (Create, Read, Update, and Delete) `API` flow in Python using Flask Framework. This repository using `MVC` (model, view, controller) flow to maintain all `API`.
 
 ## Features
 
@@ -11,6 +11,7 @@ This Repo describe how to create basic CRUD (Create, Read, Update, and Delete) i
 - Get Product based ID
 - Update Products
 - Delete Products
+- MVC (model, view, controller) flow
 
 ## Runing Project
 
@@ -30,7 +31,7 @@ pip install -r requirements.txt
 After already installed packages so you can run the project.
 
 ```
-python main.py
+python app.py
 ```
 
 ## File Tree
@@ -39,7 +40,11 @@ python main.py
 .
 ├── Basic-Crud-Golang             # Example Crud in Go/Golang
 ├── Basic-Crud-Python             # Example Crud in Python
-│   ├── main.py                   # main of the project
+│   ├── mvc                       # Library Model View Controller
+│   |    ├── controller
+│   |    ├── model
+│   |    └── view
+│   ├── app.py                    # main of the project
 │   ├── README.md                 # documentation of the project
 │   ├── requirements.txt          # list library/packages of the project
 └── README.md                     # Detail of this repo
