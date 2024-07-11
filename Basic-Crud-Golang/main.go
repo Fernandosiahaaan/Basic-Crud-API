@@ -5,15 +5,24 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 )
-
-var databaseName string = "Example.db"
 
 func main() {
 	fmt.Println("Example Crud API using SQLITE3")
-	db, err := initDB(databaseName)
+
+	// Memuat variabel lingkungan dari file .env
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file: %v", err)
+	}
+
+	// get start database
+	dbName := os.Getenv("DB_NAME")
+	db, err := initDB(dbName)
 	if err != nil {
 		log.Fatal(err)
 	}
