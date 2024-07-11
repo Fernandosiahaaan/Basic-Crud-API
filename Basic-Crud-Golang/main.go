@@ -18,18 +18,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// models.CreateProduct(db, "tas", 45)
-	// models.UpdateProduct(db, 2, "earphone", 15)
-	// models.DeleteProduct(db, 6)
-
-	// _, err = models.GetAllProduct(db)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
 	userController := controllers.ProductController{DB: db}
 	router := mux.NewRouter()
 	router.HandleFunc("/products", userController.GetAllProduct).Methods("GET")
+	router.HandleFunc("/products/{id}", userController.GetProductById).Methods("GET")
 	router.HandleFunc("/products", userController.CreateProduct).Methods("POST")
 	router.HandleFunc("/products/{id}", userController.UpdateProductById).Methods("PUT")
 	router.HandleFunc("/products/{id}", userController.DeleteProductByID).Methods("DELETE")

@@ -9,20 +9,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-type Product struct {
-	ID    int    `json: "id"`
-	Name  string `json : "name"`
-	Price int    `json : "price"`
-}
-
-type BasicResponse struct {
-	Status  int         `json:"status"`
-	Message string      `json:"message"`
-	Data    interface{} `json:"data"`
-}
-
-var MainTable string = "products"
-
+// Function to get all product in table sql
 func GetAllProduct(db *sql.DB) ([]Product, error) {
 	rows, err := db.Query("select * from " + MainTable)
 	if err != nil {
@@ -45,6 +32,19 @@ func GetAllProduct(db *sql.DB) ([]Product, error) {
 	return products, nil
 }
 
+// Function to get product by id in table sql
+func GetProductById(database *sql.DB, id int) (Product, error) {
+	var product Product
+	selectProductID := "select id, name, price from " + MainTable + " where id=$1"
+	err := database.QueryRow(selectProductID, id).Scan(&product.ID, &product.Name, &product.Price)
+	if err != nil {
+		log.Fatal(err)
+		return product, err
+	}
+	return product, nil
+}
+
+// Function to create product in table sql
 func CreateProduct(database *sql.DB, name string, price int) error {
 	// fill data in to table users
 	insertSQL := "INSERT INTO " + MainTable + " (name, price) VALUES ($1, $2)"
@@ -55,6 +55,7 @@ func CreateProduct(database *sql.DB, name string, price int) error {
 	return err
 }
 
+// Function to update product by id in table sql
 func UpdateProduct(database *sql.DB, id int, name string, price int) error {
 	// fill data in to table users
 	updateSQL := "UPDATE " + MainTable + " SET name=$1, price=$2 WHERE id=$3"
@@ -73,6 +74,7 @@ func UpdateProduct(database *sql.DB, id int, name string, price int) error {
 	return err
 }
 
+// Function to delete product by id in table sql
 func DeleteProduct(database *sql.DB, id int) error {
 	// fill data in to table users
 	deleteSQL := "DELETE FROM " + MainTable + " WHERE id=$1"

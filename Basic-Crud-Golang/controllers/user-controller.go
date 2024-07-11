@@ -15,6 +15,7 @@ type ProductController struct {
 	DB *sql.DB
 }
 
+// function create format response api
 func JsonResponse(w http.ResponseWriter, products interface{}, msg string, statusCode int) {
 	var response models.BasicResponse
 	fmt.Println(msg)
@@ -26,6 +27,7 @@ func JsonResponse(w http.ResponseWriter, products interface{}, msg string, statu
 	json.NewEncoder(w).Encode(response)
 }
 
+// function handler api to get all product
 func (pc *ProductController) GetAllProduct(w http.ResponseWriter, r *http.Request) {
 	product, err := models.GetAllProduct(pc.DB)
 	if err != nil {
@@ -34,6 +36,27 @@ func (pc *ProductController) GetAllProduct(w http.ResponseWriter, r *http.Reques
 	JsonResponse(w, product, "Success Get All Product", http.StatusOK)
 }
 
+// function handler api to get product by id
+func (pc *ProductController) GetProductById(w http.ResponseWriter, r *http.Request) {
+	var product models.Product
+	var err error
+
+	// Get ID Product from header
+	idStr := mux.Vars(r)["id"]
+	product.ID, err = strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	product, err = models.GetProductById(pc.DB, product.ID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	JsonResponse(w, product, fmt.Sprintf("Success Get Product ID %v", product.ID), http.StatusOK)
+}
+
+// function handler api to update product
 func (pc *ProductController) UpdateProductById(w http.ResponseWriter, r *http.Request) {
 	var product models.Product
 
@@ -45,8 +68,7 @@ func (pc *ProductController) UpdateProductById(w http.ResponseWriter, r *http.Re
 	}
 
 	// Get ID Product from header
-	vars := mux.Vars(r)
-	id := vars["id"]
+	id := mux.Vars(r)["id"]
 	product.ID, err = strconv.Atoi(id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -62,10 +84,10 @@ func (pc *ProductController) UpdateProductById(w http.ResponseWriter, r *http.Re
 	JsonResponse(w, product, fmt.Sprintf("Success Update Product ID %v", product.ID), http.StatusOK)
 }
 
+// function handler api to delete product
 func (pc *ProductController) DeleteProductByID(w http.ResponseWriter, r *http.Request) {
 	// Get ID Product
-	vars := mux.Vars(r)
-	idStr := vars["id"]
+	idStr := mux.Vars(r)["id"]
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -80,6 +102,7 @@ func (pc *ProductController) DeleteProductByID(w http.ResponseWriter, r *http.Re
 	JsonResponse(w, "", fmt.Sprintf("Success Delete Product ID %v", id), http.StatusOK)
 }
 
+// function handler api to create product
 func (pc *ProductController) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	var product models.Product
 
